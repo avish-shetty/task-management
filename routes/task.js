@@ -3,10 +3,19 @@ const Task = require('../models/Task');
 
 const router = express.Router();
 
-// Create a new task
+const axios = require('axios'); // Install axios with `npm install axios`
+
+//Create a task
 router.post('/', async (req, res) => {
     try {
         const { title, description, assignedTo, status, priority, deadline } = req.body;
+
+        // Validate user via User Management Service
+        if (assignedTo) {
+            const response = await axios.get(`http://localhost:5000/api/auth/profile/${assignedTo}`);
+            if (!response.data) throw new Error('Invalid assignedTo user');
+        }
+
         const task = new Task({ title, description, assignedTo, status, priority, deadline });
         await task.save();
         res.status(201).json(task);
@@ -14,6 +23,7 @@ router.post('/', async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 });
+
 
 // Get all tasks
 router.get('/', async (req, res) => {
