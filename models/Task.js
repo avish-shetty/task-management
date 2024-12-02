@@ -4,8 +4,8 @@ const taskSchema = new mongoose.Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
     assignedTo: { type: String, required: false },
-    status: { type: String, enum: ['To Do', 'In Progress', 'Done'], default: 'To Do' },
-    priority: { type: String, enum: ['Low', 'Medium', 'High'], default: 'Medium' },
+    status: { type: String, enum: ['TODO', 'INPROGRESS', 'DONE'], default: 'TODO' },
+    priority: { type: String, enum: ['LOW', 'MEDIUM', 'HIGH'], default: 'MEDIUM' },
     deadline: { type: Date, required: false },
     createdAt: { type: Date, default: Date.now },
 });
