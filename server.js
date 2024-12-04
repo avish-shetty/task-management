@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-
+const { connectRabbitMQ, publishToQueue } = require('./rabbitmq');
+const Task = require('./models/Task');
 dotenv.config();
 
 const app = express();
@@ -19,6 +20,10 @@ mongoose.connect(process.env.MONGO_URI, {
 })
     .then(() => console.log('MongoDB connected'))
     .catch((error) => console.error('Database connection error:', error));
+
+
+// RabbitMQ Connection
+connectRabbitMQ();
 
 // Routes
 const taskRoutes = require('./routes/task');
