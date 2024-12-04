@@ -1,12 +1,13 @@
 const express = require('express');
 const Task = require('../models/Task');
+const { publishToQueue } = require('../rabbitmq');
+const verifyToken = require('../middleware/authMiddleware');
 
 const router = express.Router();
-
 const axios = require('axios'); // Install axios with `npm install axios`
 
-//Create a task
-router.post('/', async (req, res) => {
+// Create a task
+router.post('/', verifyToken, async (req, res) => {
     try {
         const { title, description, assignedTo, status, priority, deadline } = req.body;
 
@@ -18,15 +19,22 @@ router.post('/', async (req, res) => {
 
         const task = new Task({ title, description, assignedTo, status, priority, deadline });
         await task.save();
+
+        // Publish event to RabbitMQ
+        publishToQueue({
+            eventType: 'task_created',
+            taskId: task._id,
+            userEmail: req.body.userEmail,
+            description: task.description,
+        });
         res.status(201).json(task);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 });
 
-
 // Get all tasks
-router.get('/', async (req, res) => {
+router.get('/', verifyToken, async (req, res) => {
     try {
         const tasks = await Task.find().populate('assignedTo', 'username email');
         res.json(tasks);
@@ -36,7 +44,7 @@ router.get('/', async (req, res) => {
 });
 
 // Get a specific task by ID
-router.get('/:id', async (req, res) => {
+router.get('/:id', verifyToken, async (req, res) => {
     try {
         const task = await Task.findById(req.params.id).populate('assignedTo', 'username email');
         if (!task) return res.status(404).json({ error: 'Task not found' });
@@ -47,7 +55,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Update a task
-router.put('/:id', async (req, res) => {
+router.put('/:id', verifyToken, async (req, res) => {
     try {
         const { title, description, assignedTo, status, priority, deadline } = req.body;
         const task = await Task.findByIdAndUpdate(
@@ -63,7 +71,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // Delete a task
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', verifyToken, async (req, res) => {
     try {
         const task = await Task.findByIdAndDelete(req.params.id);
         if (!task) return res.status(404).json({ error: 'Task not found' });
