@@ -160,7 +160,6 @@ const KanbanBoard = () => {
             }));
             setBoard({ columns: updatedColumns });
         };
-
         loadTasks();
     }, []);
 
