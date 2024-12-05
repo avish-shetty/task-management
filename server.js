@@ -23,7 +23,7 @@ mongoose.connect(process.env.MONGO_URI, {
 
 
 // RabbitMQ Connection
-connectRabbitMQ();
+// connectRabbitMQ();
 
 // Routes
 const taskRoutes = require('./routes/task');

@@ -13,7 +13,7 @@ router.post('/', verifyToken, async (req, res) => {
 
         // Validate user via User Management Service
         if (assignedTo) {
-            const response = await axios.get(`http://localhost:5000/api/auth/profile/${assignedTo}`);
+            const response = await axios.get(`http://localhost:3000/api/auth/profile/${assignedTo}`);
             if (!response.data) throw new Error('Invalid assignedTo user');
         }
 
