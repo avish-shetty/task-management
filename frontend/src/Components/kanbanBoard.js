@@ -402,7 +402,7 @@ const KanbanBoard = () => {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get('/api/tasks');
+      const response = await axios.get('http://localhost:5001/api/tasks');
       setTasks(response.data);
     } catch (error) {
       console.error('Error fetching tasks:', error);
@@ -414,11 +414,12 @@ const KanbanBoard = () => {
 
     const newTask = {
       title: newTaskTitle,
-      laneId: 'lane1'
+      laneId: 'lane1',
+      description:"description"
     };
 
     try {
-      const response = await axios.post('/api/tasks', newTask);
+      const response = await axios.post('http://localhost:5001/api/tasks', newTask);
       setTasks(prev => [...prev, response.data]);
       setNewTaskTitle('');
     } catch (error) {
@@ -428,7 +429,7 @@ const KanbanBoard = () => {
 
   const handleDeleteTask = async (taskId) => {
     try {
-      await axios.delete(`/api/tasks/${taskId}`);
+      await axios.delete(`http://localhost:5001/api/tasks/${taskId}`);
       setTasks(prev => prev.filter(task => task._id !== taskId));
     } catch (error) {
       console.error('Error deleting task:', error);
@@ -444,7 +445,7 @@ const KanbanBoard = () => {
     if (!editedTitle.trim()) return;
 
     try {
-      const response = await axios.put(`/api/tasks/${taskId}`, { title: editedTitle });
+      const response = await axios.put(` http://localhost:5001/api/tasks/${taskId}`, { title: editedTitle });
       setTasks(prev => prev.map(task => task._id === taskId ? response.data : task));
       setEditingTask(null);
       setEditedTitle('');
@@ -474,7 +475,7 @@ const KanbanBoard = () => {
     setDragOverLaneId(null);
     if (draggedTask && draggedTask.laneId !== laneId) {
       try {
-        const response = await axios.put(`/api/tasks/${draggedTask._id}`, { laneId });
+        const response = await axios.put(`http://localhost:5001/api/tasks/${draggedTask._id}`, { laneId });
         setTasks(prev => prev.map(task => task._id === draggedTask._id ? response.data : task));
       } catch (error) {
         console.error('Error updating task lane:', error);
