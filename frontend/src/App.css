@@ -1,0 +1,46 @@
+/* frontend/src/App.css */
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+.react-kanban-column {
+  background-color: orange;
+}
+.react-kanban-card {
+  background-color: purple;
+  color: rgb(14, 14, 67);
+}
+.react-kanban-card__title {
+  font-size: large;
+  text-decoration: underline;
+  font-style: italic;
+}
+.react-kanban-card--dragging {
+  transform: rotate(90deg);
+  background-color: yellow;
+  color: purple;
+}
+/* App.css */
+
+html, body, #root, .App {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.App {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.KanbanBoard {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #f0f0f0; /* Example background color */
+  padding: 20px;
+  box-sizing: border-box;
+}
